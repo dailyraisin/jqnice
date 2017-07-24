@@ -56,25 +56,50 @@
 
     //FIXME make non-jquery version
     function visibleHeight (node, pear) {
-        var $t = $(node);
-        var top = $t.position().top;
-        var windowHeight = $(pear).height();
-        var scrollTop = $(pear).scrollTop();
-        var height = $t.height();
+        var height = node.clientHeight;
+        var windowHeight = computedStyle(pear, 'height');
+        var scrollTop = pear.scrollTop;
+        var top = node.getBoundingClientRect().top + scrollTop;
+
+        console.log(
+            'normal=',
+            'scrollTop', scrollTop,
+            'height', height,
+            'windowHeight', windowHeight,
+            'top', top
+        );
+
+        //var $t = $(node);
+        //top = $t.position().top;
+        //height = $t.height();
+        //windowHeight = $(pear).height();
+        //scrollTop = $(pear).scrollTop();
+
+        //console.log(
+        //    'jQuery=',
+        //    'scrollTop', scrollTop,
+        //    'height', height,
+        //    'windowHeight', windowHeight,
+        //    'top', top
+        //);
 
         if (top < scrollTop && height - scrollTop >= windowHeight) {
+            console.log('case 1');
             // first case: the top and the bottom of the element is outside of the window
             return windowHeight;
         }
         else if (top < scrollTop) {
+            console.log('case 2');
             // second: the top is outside of the viewport but the bottom is visible
             return height - (scrollTop - top);
         }
         else if (top > scrollTop && top + height < windowHeight) {
+            console.log('case 3');
             // the whole element is visible
             return height;
         }
         else {
+            console.log('case 4');
             // the top is visible but the bottom is outside of the viewport
             return windowHeight - (top - scrollTop);
         }
