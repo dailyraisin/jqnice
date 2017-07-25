@@ -55,53 +55,56 @@
     }
 
     //FIXME make non-jquery version
-    function visibleHeight (node, pear) {
-        var height = node.clientHeight;
-        var windowHeight = computedStyle(pear, 'height');
-        var scrollTop = pear.scrollTop;
-        var top = node.getBoundingClientRect().top + scrollTop;
+    function visibleHeight (node, ctx) {
+        var nodeHeight, ctxHeight, ctxScrollTop, nodeTop;
+
+        var $t = $(node);
+        nodeTop = $t.position().top;
+        nodeHeight = $t.height();
+        ctxHeight = $(ctx).height();
+        ctxScrollTop = $(ctx).scrollTop();
+
+        console.log(
+            'jQuery=',
+            'ctxScrollTop', ctxScrollTop,
+            'nodeHeight', nodeHeight,
+            'ctxHeight', ctxHeight,
+            'nodeTop', nodeTop
+        );
+
+        nodeHeight = node.clientHeight;
+        ctxHeight = computedStyle(ctx, 'height');
+        ctxScrollTop = ctx.scrollTop;
+        nodeTop = node.getBoundingClientRect().top + ctxScrollTop;
 
         console.log(
             'normal=',
-            'scrollTop', scrollTop,
-            'height', height,
-            'windowHeight', windowHeight,
-            'top', top
+            'ctxScrollTop', ctxScrollTop,
+            'nodeHeight', nodeHeight,
+            'ctxHeight', ctxHeight,
+            'nodeTop', nodeTop
         );
 
-        //var $t = $(node);
-        //top = $t.position().top;
-        //height = $t.height();
-        //windowHeight = $(pear).height();
-        //scrollTop = $(pear).scrollTop();
 
-        //console.log(
-        //    'jQuery=',
-        //    'scrollTop', scrollTop,
-        //    'height', height,
-        //    'windowHeight', windowHeight,
-        //    'top', top
-        //);
-
-        if (top < scrollTop && height - scrollTop >= windowHeight) {
+        if (nodeTop < ctxScrollTop && nodeHeight - ctxScrollTop >= ctxHeight) {
             console.log('case 1');
-            // first case: the top and the bottom of the element is outside of the window
-            return windowHeight;
+            // first case: the nodeTop and the bottom of the element is outside of the window
+            return ctxHeight;
         }
-        else if (top < scrollTop) {
+        else if (nodeTop < ctxScrollTop) {
             console.log('case 2');
-            // second: the top is outside of the viewport but the bottom is visible
-            return height - (scrollTop - top);
+            // second: the nodeTop is outside of the viewport but the bottom is visible
+            return nodeHeight - (ctxScrollTop - nodeTop);
         }
-        else if (top > scrollTop && top + height < windowHeight) {
+        else if (nodeTop > ctxScrollTop && nodeTop + nodeHeight < ctxHeight) {
             console.log('case 3');
             // the whole element is visible
-            return height;
+            return nodeHeight;
         }
         else {
             console.log('case 4');
-            // the top is visible but the bottom is outside of the viewport
-            return windowHeight - (top - scrollTop);
+            // the nodeTop is visible but the bottom is outside of the viewport
+            return ctxHeight - (nodeTop - ctxScrollTop);
         }
     }
 
