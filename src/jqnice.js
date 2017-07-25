@@ -54,8 +54,7 @@
         return el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0;
     }
 
-    //FIXME make non-jquery version
-    function visibleHeight (node, ctx) {
+    function visibleHeightXXX (node, ctx) {
         var nodeHeight, ctxHeight, ctxScrollTop, nodeTop;
 
         var $t = $(node);
@@ -66,23 +65,23 @@
 
         console.log(
             'jQuery=',
-            'ctxScrollTop', ctxScrollTop,
-            'nodeHeight', nodeHeight,
             'ctxHeight', ctxHeight,
-            'nodeTop', nodeTop
+            'ctxScrollTop', ctxScrollTop,
+            'nodeTop', nodeTop,
+            'nodeHeight', nodeHeight
         );
 
-        nodeHeight = node.clientHeight;
+        nodeTop = node.offsetTop - computedStyle(node, 'margin-top');
+        nodeHeight = node.offsetHeight;
         ctxHeight = computedStyle(ctx, 'height');
         ctxScrollTop = ctx.scrollTop;
-        nodeTop = node.getBoundingClientRect().top + ctxScrollTop;
 
         console.log(
             'normal=',
-            'ctxScrollTop', ctxScrollTop,
-            'nodeHeight', nodeHeight,
             'ctxHeight', ctxHeight,
-            'nodeTop', nodeTop
+            'ctxScrollTop', ctxScrollTop,
+            'nodeTop', nodeTop,
+            'nodeHeight', nodeHeight
         );
 
 
@@ -106,6 +105,31 @@
             // the nodeTop is visible but the bottom is outside of the viewport
             return ctxHeight - (nodeTop - ctxScrollTop);
         }
+    }
+
+    function visibleHeight (node, ctx) {
+        var ctxHeight, ctxScrollTop, nodeTop, nodeBottom, nodeScrollBot, visibleTop, visibleBottom;
+
+        ctxHeight = computedStyle(ctx, 'height');
+        ctxScrollTop = ctx.scrollTop;
+
+        nodeScrollBot = ctxScrollTop + ctxHeight;
+
+        nodeTop = node.offsetTop;
+        nodeBottom = nodeTop + outerHeight(node);
+
+        visibleTop = nodeTop < ctxScrollTop ? ctxScrollTop : nodeTop;
+        visibleBottom = nodeBottom > nodeScrollBot ? nodeScrollBot : nodeBottom;
+
+        console.log(
+            'ctxHeight', ctxHeight,
+            'ctxScrollTop', ctxScrollTop,
+            'nodeTop', nodeTop,
+            'visibleBottom', visibleBottom,
+            'visibleTop', visibleTop
+        );
+
+        return visibleBottom - visibleTop;
     }
 
     function outerWidth (el, marginsToo) {
