@@ -86,11 +86,11 @@
     }
 
     function outerHeightWithTop (el) {
-        return el.clientWidth + computedStyle(el, 'margin-top');
+        return el.clientHeight + computedStyle(el, 'margin-top');
     }
 
     function outerHeightWithBottom (el) {
-        return el.clientWidth + computedStyle(el, 'margin-bottom');
+        return el.clientHeight + computedStyle(el, 'margin-bottom');
     }
 
     /**
