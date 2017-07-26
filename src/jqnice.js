@@ -163,7 +163,6 @@
     jqnice.computedStyle = computedStyle;
     jqnice.requestAnimFrame = requestAnimFrame;
     jqnice.isVisible = isVisible;
-    jqnice.visibleHeight = visibleHeight;
     jqnice.getClosest = getClosest;
     jqnice.outerHeight = outerHeight;
     jqnice.outerHeightWithTop = outerHeightWithTop;
